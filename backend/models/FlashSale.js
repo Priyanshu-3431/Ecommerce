@@ -1,0 +1,2 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({name:{type:String,required:true},products:[{product:{type:mongoose.Schema.Types.ObjectId,ref:'Product'},salePrice:Number,quantity:Number,sold:{type:Number,default:0}}],startAt:{type:Date,required:true,index:true},endAt:{type:Date,required:true,index:true},active:{type:Boolean,default:true}},{timestamps:true});module.exports=mongoose.model('FlashSale',schema);

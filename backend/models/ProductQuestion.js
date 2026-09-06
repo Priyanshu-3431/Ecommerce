@@ -1,0 +1,4 @@
+const mongoose=require('mongoose');
+const answerSchema=new mongoose.Schema({user:{type:mongoose.Schema.Types.ObjectId,ref:'User'},role:String,text:{type:String,required:true,trim:true},helpful:{type:Number,default:0},createdAt:{type:Date,default:Date.now}},{_id:true});
+const schema=new mongoose.Schema({product:{type:mongoose.Schema.Types.ObjectId,ref:'Product',required:true,index:true},user:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},question:{type:String,required:true,trim:true},answers:[answerSchema],approved:{type:Boolean,default:true},helpful:{type:Number,default:0}},{timestamps:true});
+module.exports=mongoose.model('ProductQuestion',schema);

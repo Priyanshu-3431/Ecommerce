@@ -1,0 +1,2 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({actor:{type:mongoose.Schema.Types.ObjectId,ref:'User',index:true},role:String,action:{type:String,required:true,index:true},entityType:String,entityId:String,before:Object,after:Object,ip:String,userAgent:String},{timestamps:true});module.exports=mongoose.model('AuditLog',schema);

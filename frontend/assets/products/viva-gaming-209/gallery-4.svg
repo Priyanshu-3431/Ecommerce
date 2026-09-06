@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+<defs>
+<linearGradient id="bg" x2="1" y2="1"><stop stop-color="hsl(177 58% 96%)"/><stop offset="1" stop-color="hsl(215 72% 88%)"/></linearGradient>
+<linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="hsl(215 80% 62%)"/><stop offset=".55" stop-color="hsl(7 75% 48%)"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+<radialGradient id="lens"><stop stop-color="#7dd3fc"/><stop offset=".5" stop-color="#2563eb"/><stop offset="1" stop-color="#020617"/></radialGradient>
+<filter id="shadow"><feDropShadow dx="0" dy="22" stdDeviation="22" flood-opacity=".2"/></filter>
+</defs>
+<rect width="900" height="900" rx="52" fill="url(#bg)"/><circle cx="100" cy="125" r="53" fill="hsl(7 75% 70%)" opacity=".22"/><circle cx="310" cy="685" r="71" fill="hsl(42 75% 70%)" opacity=".22"/><circle cx="520" cy="125" r="35" fill="hsl(77 75% 70%)" opacity=".22"/><circle cx="730" cy="685" r="53" fill="hsl(112 75% 70%)" opacity=".22"/>
+<ellipse cx="450" cy="705" rx="265" ry="55" fill="#111827" opacity=".10"/>
+<g transform="translate(450 445) rotate(3) translate(-450 -445)" filter="url(#shadow)"><path d="M255 380c30-125 115-175 195-175s165 50 195 175l70 220c20 64-12 115-68 115-38 0-65-25-92-70l-55-90H400l-55 90c-27 45-54 70-92 70-56 0-88-51-68-115z" fill="#111827"/><circle cx="350" cy="435" r="22" fill="hsl(177 68% 42%)"/><path d="M330 435h40M350 415v40" stroke="#fff" stroke-width="11" stroke-linecap="round"/><circle cx="560" cy="415" r="20" fill="hsl(212 72% 54%)"/><circle cx="610" cy="465" r="20" fill="#ef4444"/></g>
+<rect x="52" y="45" width="245" height="54" rx="27" fill="#fff" opacity=".88"/><text x="78" y="80" font-family="Arial,sans-serif" font-size="22" fill="#111827" font-weight="800">ALT VIEW</text>
+<text x="60" y="835" font-family="Arial,sans-serif" font-size="30" fill="#111827" font-weight="800">Viva Gaming 209</text>
+<text x="60" y="870" font-family="Arial,sans-serif" font-size="20" fill="#475569">Gaming · ShopVerse</text>
+</svg>

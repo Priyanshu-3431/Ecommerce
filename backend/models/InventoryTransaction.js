@@ -1,0 +1,3 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({product:{type:mongoose.Schema.Types.ObjectId,ref:'Product',required:true,index:true},seller:{type:mongoose.Schema.Types.ObjectId,ref:'User'},admin:{type:mongoose.Schema.Types.ObjectId,ref:'User'},type:{type:String,enum:['ADD','DEDUCT','ADJUST','ORDER','RETURN'],required:true},qty:{type:Number,required:true},before:Number,after:Number,reason:String,reference:String},{timestamps:true});
+module.exports=mongoose.model('InventoryTransaction',schema);

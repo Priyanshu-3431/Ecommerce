@@ -1,0 +1,2 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({title:{type:String,required:true},subtitle:String,image:{type:String,required:true},link:{type:String,default:'/products.html'},position:{type:Number,default:0},active:{type:Boolean,default:true}},{timestamps:true});module.exports=mongoose.model('Banner',schema);

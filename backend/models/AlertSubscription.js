@@ -1,0 +1,2 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({user:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true,index:true},product:{type:mongoose.Schema.Types.ObjectId,ref:'Product',required:true,index:true},type:{type:String,enum:['PRICE_DROP','BACK_IN_STOCK'],required:true},targetPrice:Number,active:{type:Boolean,default:true},lastTriggeredAt:Date},{timestamps:true});schema.index({user:1,product:1,type:1},{unique:true});module.exports=mongoose.model('AlertSubscription',schema);

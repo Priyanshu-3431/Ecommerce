@@ -1,0 +1,1 @@
+const AuditLog=require('../models/AuditLog');module.exports=async(req,action,entityType,entityId,before,after)=>{try{await AuditLog.create({actor:req.user?._id,role:req.user?.role,action,entityType,entityId:String(entityId||''),before,after,ip:req.ip,userAgent:req.get('user-agent')})}catch(e){console.error('Audit log error:',e.message)}};

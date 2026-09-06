@@ -1,0 +1,6 @@
+const router=require('express').Router();const path=require('path');const fs=require('fs');const multer=require('multer');const {auth}=require('../middleware/auth');
+const dir=path.join(__dirname,'../uploads');if(!fs.existsSync(dir))fs.mkdirSync(dir,{recursive:true});
+const storage=multer.diskStorage({destination:(req,file,cb)=>cb(null,dir),filename:(req,file,cb)=>cb(null,Date.now()+'-'+Math.random().toString(36).slice(2,8)+path.extname(file.originalname).toLowerCase())});
+const allowed=new Set(['image/jpeg','image/png','image/webp','image/avif']);const upload=multer({storage,limits:{fileSize:5*1024*1024,files:40},fileFilter:(req,file,cb)=>allowed.has(file.mimetype)?cb(null,true):cb(new Error('Only JPG, PNG, WEBP or AVIF images are allowed'))});
+router.post('/images',auth,(req,res,next)=>{if(!['admin','seller'].includes(req.user.role))return res.status(403).json({message:'Admin/Seller only'});next()},upload.array('images',40),(req,res)=>res.status(201).json({files:req.files.map(f=>({name:f.filename,url:'/uploads/'+f.filename,size:f.size}))}));
+router.use((err,req,res,next)=>res.status(400).json({message:err.message}));module.exports=router;

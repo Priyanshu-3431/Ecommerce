@@ -1,0 +1,3 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({code:{type:String,required:true,unique:true,uppercase:true,trim:true,index:true},initialBalance:{type:Number,required:true,min:0},balance:{type:Number,required:true,min:0},expiresAt:Date,active:{type:Boolean,default:true},issuedTo:{type:mongoose.Schema.Types.ObjectId,ref:'User'},createdBy:{type:mongoose.Schema.Types.ObjectId,ref:'User'},redemptions:[{user:{type:mongoose.Schema.Types.ObjectId,ref:'User'},order:{type:mongoose.Schema.Types.ObjectId,ref:'Order'},amount:Number,at:{type:Date,default:Date.now}}]},{timestamps:true});
+module.exports=mongoose.model('GiftCard',schema);

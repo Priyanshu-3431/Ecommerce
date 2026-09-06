@@ -1,0 +1,3 @@
+const mongoose=require('mongoose');
+const schema=new mongoose.Schema({order:{type:mongoose.Schema.Types.ObjectId,ref:'Order',required:true,index:true},user:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true,index:true},reason:{type:String,required:true},details:String,evidence:[String],type:{type:String,enum:['RETURN','REPLACE','REFUND'],default:'RETURN'},status:{type:String,enum:['REQUESTED','APPROVED','REJECTED','PICKUP_SCHEDULED','PICKED_UP','REFUND_INITIATED','REFUNDED','REPLACED'],default:'REQUESTED'},adminNote:String,refundAmount:{type:Number,default:0}},{timestamps:true});
+module.exports=mongoose.model('ReturnRequest',schema);
