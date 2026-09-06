@@ -5,3 +5,82 @@
 
 /* Order-specific support center */
 .order-support-shell{max-width:1280px;margin:28px auto;padding:0 18px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}.order-support-chat{min-width:0}.order-chat-head{gap:16px;align-items:center}.order-support-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn.disabled{opacity:.55;cursor:not-allowed;pointer-events:auto}.order-context-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e8edf6;border-bottom:1px solid #e8edf6}.order-context-strip>div{background:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:4px}.order-context-strip span{font-size:11px;color:#73809a;text-transform:uppercase;letter-spacing:.04em}.order-context-strip b{font-size:13px}.refund-side{position:sticky;top:88px}.refund-side form{display:grid;gap:13px}.refund-side label{display:grid;gap:6px;font-size:13px;font-weight:700}.support-select,.refund-side textarea{width:100%;border:1px solid #dfe5ef;border-radius:12px;padding:11px 12px;background:#fff;color:#182235;font:inherit}.active-request{border:1px solid #dfe5ef;background:#f8faff;border-radius:14px;padding:12px;margin-bottom:14px}.active-request{display:grid;grid-template-columns:1fr auto;gap:6px}.active-request p{grid-column:1/-1;margin:0;color:#69758c}.refund-note{font-size:11px;line-height:1.45;margin:0}@media(max-width:900px){.order-support-shell{grid-template-columns:1fr}.refund-side{position:static}.order-context-strip{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.order-support-shell{margin:14px auto;padding:0 10px}.order-chat-head{align-items:flex-start}.order-support-actions{width:100%;justify-content:flex-start}.order-context-strip{grid-template-columns:1fr 1fr}.order-context-strip>div{padding:10px}.order-support-actions .btn{flex:1;text-align:center}}
+/* SHOPVERSE CUSTOMER MOBILE FIX */
+
+@media (max-width: 650px) {
+  .customer-shell {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 12px 45px;
+    overflow: hidden;
+  }
+
+  .customer-head {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .premium-card,
+  .order-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .order-products-preview {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .preview-item {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .order-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .order-actions .btn {
+    width: 100%;
+  }
+
+  .profile-hero {
+    width: 100%;
+  }
+
+  .mini-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .address-card {
+    flex-direction: column;
+  }
+
+  .wallet-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .wallet-actions input,
+  .wallet-actions button {
+    width: 100%;
+  }
+
+  .chat-top {
+    padding: 14px;
+  }
+
+  .chat-messages {
+    padding: 12px;
+  }
+
+  .chat-compose {
+    padding: 10px;
+  }
+
+  .bubble {
+    max-width: 88%;
+  }
+}
