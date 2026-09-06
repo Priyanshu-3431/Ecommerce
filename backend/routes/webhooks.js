@@ -9,29 +9,54 @@ const Payment = require('../models/Payment');
 const Notification = require('../models/Notification');
 
 function validSignature(raw, timestamp, signature) {
-  if (
-    !process.env.CASHFREE_CLIENT_SECRET ||
-    !raw ||
-    !timestamp ||
-    !signature
-  ) {
+  const secret = String(
+    process.env.CASHFREE_CLIENT_SECRET || ''
+  ).trim();
+
+  const ts = String(timestamp || '').trim();
+  const sig = String(signature || '').trim();
+
+  console.log('--- CASHFREE WEBHOOK DEBUG ---');
+  console.log('secret present:', !!secret);
+  console.log('secret length:', secret.length);
+  console.log('timestamp present:', !!ts);
+  console.log('signature present:', !!sig);
+  console.log('signature length:', sig.length);
+  console.log(
+    'raw body length:',
+    Buffer.byteLength(raw || '', 'utf8')
+  );
+
+  if (!secret || !raw || !ts || !sig) {
     return false;
   }
 
   const expected = crypto
-    .createHmac(
-      'sha256',
-      process.env.CASHFREE_CLIENT_SECRET
-    )
-    .update(String(timestamp) + raw)
+    .createHmac('sha256', secret)
+    .update(ts + raw)
     .digest('base64');
+
+  console.log(
+    'expected signature length:',
+    expected.length
+  );
+
+  console.log(
+    'signature match:',
+    expected === sig
+  );
 
   try {
     return crypto.timingSafeEqual(
-      Buffer.from(expected),
-      Buffer.from(signature)
+      Buffer.from(expected, 'utf8'),
+      Buffer.from(sig, 'utf8')
     );
-  } catch {
+  } catch (error) {
+    console.log(
+      'signature compare error:',
+      error.message
+    );
+
     return false;
   }
 }
@@ -53,18 +78,14 @@ router.post('/cashfree', async (req, res) => {
     );
 
     /*
-      Cashfree Dashboard endpoint test may not always
-      contain a real signed payment payload.
+      Agar Cashfree endpoint test me signature headers
+      bilkul nahi aaye, to endpoint ko 200 response do.
 
-      If both signature headers are missing,
-      acknowledge the endpoint test with HTTP 200.
-
-      Real Cashfree webhook requests containing
-      signature headers are always verified below.
+      Signed webhook request ko hamesha verify kiya jayega.
     */
     if (!timestamp && !signature) {
       console.log(
-        'Cashfree webhook endpoint test received'
+        'Cashfree webhook endpoint test received without signature'
       );
 
       return res.status(200).json({
@@ -73,7 +94,6 @@ router.post('/cashfree', async (req, res) => {
       });
     }
 
-    // Real webhook must have a valid signature
     if (
       !validSignature(
         raw,
@@ -94,7 +114,12 @@ router.post('/cashfree', async (req, res) => {
 
     try {
       event = JSON.parse(raw);
-    } catch {
+    } catch (error) {
+      console.error(
+        'Cashfree invalid webhook JSON:',
+        error.message
+      );
+
       return res.status(400).json({
         message: 'Invalid webhook payload'
       });
@@ -106,7 +131,15 @@ router.post('/cashfree', async (req, res) => {
     const payment =
       event?.data?.payment;
 
-    // Nothing useful to process
+    console.log(
+      'Cashfree webhook verified:',
+      {
+        orderId: orderId || null,
+        paymentStatus:
+          payment?.payment_status || null
+      }
+    );
+
     if (!orderId) {
       return res.status(200).json({
         ok: true
@@ -134,7 +167,6 @@ router.post('/cashfree', async (req, res) => {
       $or: orderConditions
     });
 
-    // Avoid forcing Cashfree retries
     if (!order) {
       console.warn(
         'Cashfree order not found:',
@@ -146,7 +178,11 @@ router.post('/cashfree', async (req, res) => {
       });
     }
 
-    // Save payment record
+    /*
+      Payment record ko idempotent tarike se save karo.
+      Ek hi Cashfree payment multiple webhook retries
+      me duplicate create nahi hoga.
+    */
     if (payment?.cf_payment_id) {
       await Payment.updateOne(
         {
@@ -176,11 +212,12 @@ router.post('/cashfree', async (req, res) => {
       );
     }
 
-    // Successful payment
     if (
       payment?.payment_status === 'SUCCESS'
     ) {
-      // Commit inventory once
+      /*
+        Inventory sirf ek baar commit hoga.
+      */
       if (!order.inventoryCommitted) {
         const changed = [];
         let inventoryOk = true;
@@ -209,7 +246,10 @@ router.post('/cashfree', async (req, res) => {
           changed.push(item);
         }
 
-        // Roll back stock if one product fails
+        /*
+          Agar kisi product ka stock insufficient hua,
+          pehle decrease kiye products ka stock rollback.
+        */
         if (!inventoryOk) {
           for (const item of changed) {
             await Product.updateOne(
@@ -237,6 +277,10 @@ router.post('/cashfree', async (req, res) => {
 
         order.inventoryCommitted = true;
 
+        /*
+          Successful payment ke baad customer cart clear
+          aur loyalty points add.
+        */
         await User.updateOne(
           {
             _id: order.user
@@ -252,6 +296,9 @@ router.post('/cashfree', async (req, res) => {
           }
         );
 
+        /*
+          Coupon usage ek baar increment.
+        */
         if (order.couponCode) {
           await Coupon.updateOne(
             {
@@ -285,6 +332,9 @@ router.post('/cashfree', async (req, res) => {
 
       await order.save();
 
+      /*
+        Notification sirf pehli successful payment par.
+      */
       if (firstPaid) {
         await Notification.create({
           user: order.user,
@@ -295,6 +345,11 @@ router.post('/cashfree', async (req, res) => {
           link: '/orders.html'
         });
       }
+
+      console.log(
+        'Cashfree payment processed successfully:',
+        order.orderNumber
+      );
     }
 
     return res.status(200).json({
